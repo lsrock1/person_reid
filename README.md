@@ -192,6 +192,7 @@ The download link is [Here](https://drive.google.com/open?id=1XVEYb0TN2SbBYOqf8S
 |Methods | Rank@1 | mAP| Reference|
 | -------- | ----- | ---- | ---- |
 | [EfficientNet-b4] | 85.78% | 66.80% |  `python train.py --use_efficient --name eff; python test.py --name eff` |
+| [ConvNeXt] | 88.98% | 71.35% |  `python train.py --use_convnext --name convnext; python test.py --name convnext` |
 | [ResNet-50 (fp16)] | 88.03% | 71.40% | `python train.py --name fp16 --fp16 --train_all` |
 | [ResNet-50] | 88.84% | 71.59% |  `python train.py --train_all` |
 | [ResNet-50-ibn] | 89.13% | 73.40% | `python train.py --train_all --name res-ibn --ibn` |

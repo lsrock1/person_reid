@@ -17,7 +17,7 @@ import os
 import scipy.io
 import yaml
 import math
-from model import ft_net, ft_net_dense, ft_net_hr, ft_net_swin, ft_net_efficient, ft_net_NAS, PCB, PCB_test
+from model import ft_net, ft_net_dense, ft_net_hr, ft_net_swin, ft_net_efficient, ft_net_NAS, ft_net_convnext, PCB, PCB_test
 from utils import fuse_all_conv_bn
 #fp16
 try:
@@ -57,6 +57,8 @@ opt.use_NAS = config['use_NAS']
 opt.stride = config['stride']
 if 'use_swin' in config:
     opt.use_swin = config['use_swin']
+if 'use_convnext' in config:
+    opt.use_convnext = config['use_convnext']
 if 'use_efficient' in config:
     opt.use_efficient = config['use_efficient']
 if 'use_hr' in config:
@@ -170,7 +172,7 @@ def extract_feature(model,dataloaders):
     #features = torch.FloatTensor()
     count = 0
     if opt.linear_num <= 0:
-        if opt.use_swin or opt.use_dense:
+        if opt.use_swin or opt.use_dense or opt.use_convnext:
             opt.linear_num = 1024
         elif opt.use_efficient:
             opt.linear_num = 1792
@@ -254,6 +256,8 @@ elif opt.use_NAS:
     model_structure = ft_net_NAS(opt.nclasses, linear_num=opt.linear_num)
 elif opt.use_swin:
     model_structure = ft_net_swin(opt.nclasses, linear_num=opt.linear_num)
+elif opt.use_convnext:
+    model_structure = ft_net_convnext(opt.nclasses, linear_num=opt.linear_num)
 elif opt.use_efficient:
     model_structure = ft_net_efficient(opt.nclasses, linear_num=opt.linear_num)
 elif opt.use_hr:

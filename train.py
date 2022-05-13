@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 #from PIL import Image
 import time
 import os
-from model import ft_net, ft_net_dense, ft_net_hr, ft_net_swin, ft_net_efficient, ft_net_NAS, PCB
+from model import ft_net, ft_net_dense, ft_net_hr, ft_net_swin, ft_net_convnext, ft_net_efficient, ft_net_NAS, PCB
 from random_erasing import RandomErasing
 from dgfolder import DGFolder
 import yaml
@@ -51,7 +51,8 @@ parser.add_argument('--use_dense', action='store_true', help='use densenet121' )
 parser.add_argument('--use_swin', action='store_true', help='use swin transformer 224x224' )
 parser.add_argument('--use_efficient', action='store_true', help='use efficientnet-b4' )
 parser.add_argument('--use_NAS', action='store_true', help='use NAS' )
-parser.add_argument('--use_hr', action='store_true', help='use NAS' )
+parser.add_argument('--use_hr', action='store_true', help='use hrNet' )
+parser.add_argument('--use_convnext', action='store_true', help='use ConvNext' )
 parser.add_argument('--warm_epoch', default=0, type=int, help='the first K epoch that needs warm up')
 parser.add_argument('--total_epoch', default=60, type=int, help='total training epoch')
 parser.add_argument('--lr', default=0.05, type=float, help='learning rate')
@@ -439,6 +440,8 @@ elif opt.use_efficient:
     model = ft_net_efficient(len(class_names), opt.droprate, circle = return_feature, linear_num=opt.linear_num)
 elif opt.use_hr:
     model = ft_net_hr(len(class_names), opt.droprate, circle = return_feature, linear_num=opt.linear_num)
+elif opt.use_convnext:
+    model = ft_net_convnext(len(class_names), opt.droprate, circle = return_feature, linear_num=opt.linear_num)
 else:
     model = ft_net(len(class_names), opt.droprate, opt.stride, circle = return_feature, ibn=opt.ibn, linear_num=opt.linear_num)
 

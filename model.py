@@ -5,6 +5,7 @@ from torchvision import models
 from torch.autograd import Variable
 import pretrainedmodels
 import timm
+from timm.models.layers import DropPath
 
 ######################################################################
 def weights_init_kaiming(m):
@@ -24,6 +25,13 @@ def weights_init_classifier(m):
     if classname.find('Linear') != -1:
         init.normal_(m.weight.data, std=0.001)
         init.constant_(m.bias.data, 0.0)
+
+
+def activate_drop(m):
+    classname = m.__class__.__name__
+    if classname.find('Drop') != -1:
+        m.p = 0.1
+        m.inplace = True
 
 # Defines the new fc layer and classification layer
 # |--Linear--|--bn--|--relu--|--Linear--|
@@ -116,6 +124,28 @@ class ft_net_swin(nn.Module):
         x = x.view(x.size(0), x.size(1))
         x = self.classifier(x)
         return x
+
+class ft_net_convnext(nn.Module):
+
+    def __init__(self, class_num, droprate=0.5, stride=2, circle=False, linear_num=512):
+        super(ft_net_convnext, self).__init__()
+        model_ft = timm.create_model('convnext_base', pretrained=True, drop_path_rate = 0.2)
+        # avg pooling to global pooling
+        #model_ft.avgpool = nn.AdaptiveAvgPool2d((1,1))
+        model_ft.head = nn.Sequential() # save memory
+        self.model = model_ft
+        #self.model.apply(activate_drop)
+        self.circle = circle
+        self.avgpool = nn.AdaptiveAvgPool2d((1,1))
+        self.classifier = ClassBlock(1024, class_num, droprate, linear=linear_num, return_f = circle)
+
+    def forward(self, x):
+        x = self.model.forward_features(x)
+        x = self.avgpool(x)
+        x = x.view(x.size(0), x.size(1))
+        x = self.classifier(x)
+        return x
+
 
 # Define the HRNet18-based Model
 class ft_net_hr(nn.Module):
