@@ -47,6 +47,7 @@ parser.add_argument('--batchsize', default=32, type=int, help='batchsize')
 parser.add_argument('--linear_num', default=512, type=int, help='feature dimension: 512 or default or 0 (linear=False)')
 parser.add_argument('--stride', default=2, type=int, help='stride')
 parser.add_argument('--erasing_p', default=0, type=float, help='Random Erasing probability, in [0,1]')
+parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight decay. More Regularization Smaller Weight.')
 parser.add_argument('--use_dense', action='store_true', help='use densenet121' )
 parser.add_argument('--use_swin', action='store_true', help='use swin transformer 224x224' )
 parser.add_argument('--use_efficient', action='store_true', help='use efficientnet-b4' )
@@ -466,7 +467,7 @@ if not opt.PCB:
     optimizer_ft = optim_name([
              {'params': base_params, 'lr': 0.1*opt.lr},
              {'params': classifier_params, 'lr': opt.lr}
-         ], weight_decay=5e-4, momentum=0.9, nesterov=True)
+         ], weight_decay=opt.weight_decay, momentum=0.9, nesterov=True)
 else:
     ignored_params = list(map(id, model.model.fc.parameters() ))
     ignored_params += (list(map(id, model.classifier0.parameters() )) 
@@ -483,7 +484,7 @@ else:
     optimizer_ft = optim_name([
              {'params': base_params, 'lr': 0.1*opt.lr},
              {'params': classifier_params, 'lr': opt.lr}
-         ], weight_decay=5e-4, momentum=0.9, nesterov=True)
+         ], weight_decay=opt.weight_decay, momentum=0.9, nesterov=True)
 
 # Decay LR by a factor of 0.1 every 40 epochs
 exp_lr_scheduler = optim.lr_scheduler.StepLR(optimizer_ft, step_size=opt.total_epoch*2//3, gamma=0.1)
