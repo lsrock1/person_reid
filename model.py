@@ -5,7 +5,6 @@ from torchvision import models
 from torch.autograd import Variable
 import pretrainedmodels
 import timm
-from timm.models.layers import DropPath
 
 ######################################################################
 def weights_init_kaiming(m):
