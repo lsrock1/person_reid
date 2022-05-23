@@ -251,7 +251,7 @@ if opt.multi:
 # Load Collected data Trained model
 print('-------test-----------')
 if opt.use_dense:
-    model_structure = ft_net_dense(opt.nclasses, linear_num=opt.linear_num)
+    model_structure = ft_net_dense(opt.nclasses, stride = opt.stride, linear_num=opt.linear_num)
 elif opt.use_NAS:
     model_structure = ft_net_NAS(opt.nclasses, linear_num=opt.linear_num)
 elif opt.use_swin:

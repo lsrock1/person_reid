@@ -432,7 +432,7 @@ def save_network(network, epoch_label):
 return_feature = opt.arcface or opt.cosface or opt.circle or opt.triplet or opt.contrast or opt.instance or opt.lifted or opt.sphere
 
 if opt.use_dense:
-    model = ft_net_dense(len(class_names), opt.droprate, circle = return_feature, linear_num=opt.linear_num)
+    model = ft_net_dense(len(class_names), opt.droprate, opt.stride, circle = return_feature, linear_num=opt.linear_num)
 elif opt.use_NAS:
     model = ft_net_NAS(len(class_names), opt.droprate, linear_num=opt.linear_num)
 elif opt.use_swin:
