@@ -119,7 +119,8 @@ class ft_net_swin(nn.Module):
     def forward(self, x):
         x = self.model.forward_features(x)
         # swin is update in latest timm>0.6.0, so I add the following two lines.
-        x = self.avgpool(x.permute((0,2,1)))
+        x = x.reshape(x.shape[0], x.shape[1], 1)
+        x = self.avgpool(x)
         x = x.view(x.size(0), x.size(1))
         x = self.classifier(x)
         return x

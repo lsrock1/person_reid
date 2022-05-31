@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function, division
-
+from tqdm import tqdm
 import argparse
 import torch
 import torch.nn as nn
@@ -40,10 +40,10 @@ from pytorch_metric_learning import losses, miners #pip install pytorch-metric-l
 parser = argparse.ArgumentParser(description='Training')
 parser.add_argument('--gpu_ids',default='0', type=str,help='gpu_ids: e.g. 0  0,1,2  0,2')
 parser.add_argument('--name',default='ft_ResNet50', type=str, help='output model name')
-parser.add_argument('--data_dir',default='../Market/pytorch',type=str, help='training dir path')
+parser.add_argument('--data_dir',default='../data/tracking/small',type=str, help='training dir path')
 parser.add_argument('--train_all', action='store_true', help='use all training data' )
 parser.add_argument('--color_jitter', action='store_true', help='use color jitter in training' )
-parser.add_argument('--batchsize', default=32, type=int, help='batchsize')
+parser.add_argument('--batchsize', default=128, type=int, help='batchsize')
 parser.add_argument('--linear_num', default=512, type=int, help='feature dimension: 512 or default or 0 (linear=False)')
 parser.add_argument('--stride', default=2, type=int, help='stride')
 parser.add_argument('--erasing_p', default=0, type=float, help='Random Erasing probability, in [0,1]')
@@ -235,7 +235,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             running_loss = 0.0
             running_corrects = 0.0
             # Iterate over data.
-            for data in dataloaders[phase]:
+            for data in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
                 # get the inputs
                 inputs, labels = data
                 now_batch_size,c,h,w = inputs.shape

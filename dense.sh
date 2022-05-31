@@ -1,0 +1,1 @@
+python train.py --warm_epoch 5 --stride 1 --erasing_p 0.5 --batchsize 8 --lr 0.02 --name dense_warm5_s1_b8_lr2_p0.5_circle --circle --use_dense
